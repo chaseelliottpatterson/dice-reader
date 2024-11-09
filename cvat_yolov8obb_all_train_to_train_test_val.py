@@ -4,11 +4,11 @@ import shutil
 import yaml
 
 # Define input and output directories
-INPUT_DIR = "C:/Users/Studio/Documents/GitHub/dice-reader/data/dice-reader_test_set"
+INPUT_DIR = "C:/Users/Studio/Documents/GitHub/dice-reader/data/dice-reader-139"
 OUTPUT_DIR = INPUT_DIR + "_cov"
-TRAIN = .4
+TRAIN = .45
 TEST= .4
-VAL = .2
+VAL = .15
 
 def main():
     if TRAIN + TEST + VAL != 1:
