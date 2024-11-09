@@ -1,8 +1,0 @@
-data/images/train/raw-initial/DJI_20241005234512_0245_D.JPG
-data/images/train/raw-initial/DJI_20241005234521_0246_D.JPG
-data/images/train/raw-initial/DJI_20241005234529_0247_D.JPG
-data/images/train/raw-initial/DJI_20241005234540_0248_D.JPG
-data/images/train/raw-initial/DJI_20241005234549_0249_D.JPG
-data/images/train/raw-initial/DJI_20241005234559_0250_D.JPG
-data/images/train/raw-initial/DJI_20241005234607_0251_D.JPG
-data/images/train/raw-initial/DJI_20241005234616_0252_D.JPG
