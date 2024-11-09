@@ -10,10 +10,10 @@ image_path = "C:/Users/Studio/Documents/GitHub/dice-reader/data/dice-reader-139_
 image = cv2.imread(image_path)
 
 # Run inference
-results = model(image, conf=0.1)
+results = model(image, conf=0.9)
 
 # Print detection results
-print(results)  # This will print bounding box coordinates, classes, and confidence scores
+print(results[0])  # This will print bounding box coordinates, classes, and confidence scores
 
 # Draw bounding boxes on the image
 results_plotted = results[0].plot()  # Access the first result and plot it
