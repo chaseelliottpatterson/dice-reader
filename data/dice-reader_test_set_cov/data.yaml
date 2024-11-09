@@ -1,0 +1,6 @@
+names:
+  0: dice
+path: C:/Users/Studio/Documents/GitHub/dice-reader/data/dice-reader_test_set_cov
+test: images/test
+train: images/train
+val: images/val
