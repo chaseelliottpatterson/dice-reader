@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 import supervision as sv
 import cv2
-import matplotlib.pyplot as plt
+import os
 from supervision.draw.color import Color, ColorPalette
 from supervision.annotators.utils import ColorLookup
 
@@ -21,9 +21,9 @@ detections = sv.Detections.from_ultralytics(results[0])
 # Create a color palette with specific colors for each class (e.g., "red dice" and "blue dice")
 color_palette = ColorPalette([
     Color(255, 0, 0),      # Red for "red dice"
-    Color(100, 149, 237)     # Blue for "blue dice"
+    Color(100, 149, 237)   # Blue for "blue dice"
 ])
-print(detections)
+
 # Initialize OrientedBoxAnnotator with the color palette and class-based color lookup
 oriented_box_annotator = sv.OrientedBoxAnnotator(color=color_palette, thickness=2, color_lookup=ColorLookup.CLASS)
 
@@ -36,26 +36,25 @@ labels = [
     for class_id, confidence in zip(detections.class_id, detections.confidence)
 ]
 
-# Draw labels above each bounding box with a background matching the box color
-for label, box, class_id in zip(labels, detections.xyxy, detections.class_id):
-    x, y = int(box[0]), int(box[1])
+# Ensure output directory exists
+output_dir = "output"
+os.makedirs(output_dir, exist_ok=True)
 
-    # Get the color for the text background from the color palette based on the class ID
-    color = color_palette.by_idx(class_id).as_bgr()
-
-    # Draw larger background for the label text
-    font_scale = 6
-    font_thickness = 6
-    (text_width, text_height), baseline = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, font_scale, font_thickness)
-    cv2.rectangle(annotated_image, (x, y - text_height - 15), (x + text_width + 10, y), color, -1)  # Larger filled rectangle with box color
-
-    # Add the label text on top of the colored background with black text and larger font size
-    cv2.putText(
-        annotated_image, label, (x + 5, y - 8),
-        cv2.FONT_HERSHEY_SIMPLEX, font_scale, (0, 0, 0), font_thickness  # Black text, larger size, and thicker stroke
-    )
-
-# Display the annotated image with labels using matplotlib
-plt.imshow(cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB))
-plt.axis('off')
-plt.show()
+# Crop and save each detection with a buffer
+buffer = 10  # Buffer size in pixels
+for i, (box, label) in enumerate(zip(detections.xyxy, labels)):
+    x_min, y_min, x_max, y_max = map(int, box)  # Get bounding box coordinates and convert to int
+    
+    # Apply buffer while ensuring coordinates are within image bounds
+    x_min = max(0, x_min - buffer)
+    y_min = max(0, y_min - buffer)
+    x_max = min(image.shape[1], x_max + buffer)
+    y_max = min(image.shape[0], y_max + buffer)
+    
+    # Crop the ROI from the original image with buffer
+    cropped_image = image[y_min:y_max, x_min:x_max]
+    
+    # Save the cropped detection
+    output_path = os.path.join(output_dir, f"detection_{i+1}_{label.replace(' ', '_')}.jpg")
+    cv2.imwrite(output_path, cropped_image)
+    print(f"Saved: {output_path}")
