@@ -1,14 +1,32 @@
-from ultralytics import YOLO
+import os
+import random
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
+from ultralytics import YOLO
+
+# Define the base path for the images
+base_path = "C:/Users/Studio/Documents/GitHub/dice-reader/data/dice-class-cropped-organized/test"
+
+# Function to randomly select an image file from the directory structure
+def get_random_image_path(base_path):
+    image_files = []
+    for root, _, files in os.walk(base_path):
+        for file in files:
+            if file.endswith((".jpg", ".jpeg", ".png")):
+                image_files.append(os.path.join(root, file))
+    return random.choice(image_files) if image_files else None
+
+# Get a random image path
+image_path = get_random_image_path(base_path)
+if image_path is None:
+    raise FileNotFoundError("No image files found in the specified directory.")
 
 # Load the trained YOLOv8 classification model
 model = YOLO('C:/Users/Studio/Documents/GitHub/dice-reader/scripts/classify/runs/classify/yolov8n_cls_2024_11_11__14_49/weights/best.pt')
 
-# Load an image for classification
-image_path = "C:/Users/Studio/Documents/GitHub/dice-reader/data/dice-class-cropped-organized/test/1/DJI_20241005231855_0126_D_detection_2.jpg"
+# Load the random image for classification
 image = cv2.imread(image_path)
 
 # Check if image is loaded correctly
